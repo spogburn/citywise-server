@@ -1,0 +1,22 @@
+{
+  "name": "say-something-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "cors": "^2.8.0",
+    "dotenv": "^2.0.0",
+    "express": "^4.14.0",
+    "express-jwt": "^3.4.0",
+    "json-web-token": "^2.0.3",
+    "knex": "^0.11.10",
+    "morgan": "^1.7.0",
+    "pg": "^6.1.0"
+  }
+}
