@@ -5,6 +5,7 @@ var express = require('express'),
 logger = require('morgan'),
 bodyParser = require('body-parser'),
 expressJWT = require('express-jwt'),
+jwt = require('jsonwebtoken'),
 cors = require('cors'),
 knex = require('./db/knex'),
 passport = require('passport'),
@@ -72,10 +73,12 @@ var oauth = require('./routes/oauth');
 var api = require('./routes/api');
 var index = require('./routes/index')
 app.use('/', index)
+
 app.use('/oauth', oauth);
-app.use('/api', expressJWT({
-  secret: process.env.SECRET
-}), api);
+// app.use('/api', expressJWT({
+//   secret: process.env.SECRET
+// }), api);
+app.use('/api', api)
 
 //unauthorized error handler
 app.use(function(err, req, res, next) {
