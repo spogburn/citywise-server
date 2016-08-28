@@ -4,10 +4,26 @@ var express = require('express');
 var router = express.Router();
 var knex = require('../db/knex');
 var bcrypt = require('bcrypt');
-var jwt = require('jsonwebtoken')
+var jwt = require('jsonwebtoken');
+var request = require('request');
 
 router.get('/', function(req, res, next){
   res.send("<a href='/oauth/google'><button>Click Here To Authenticate</button></a>")
+})
+
+router.post('/google-login', function(req, res, next){
+  console.log('the request body:', req.body);
+
+  request('https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=' + req.body.access_token, function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        console.log('response: ', response)
+        console.log('body: ', body);
+        var email = body.email // this is the email address
+        // sign and send back the JWT here
+      }
+
+})
+      res.send('success')
 })
 
 router.post('/admin/signup', function(req, res, next){
