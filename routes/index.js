@@ -11,19 +11,26 @@ router.get('/', function(req, res, next){
   res.send("<a href='/oauth/google'><button>Click Here To Authenticate</button></a>")
 })
 
-router.post('/google-login', function(req, res, next){
-  console.log('the request body:', req.body);
-
-  request('https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=' + req.body.access_token, function (error, response, body) {
-      if (!error && response.statusCode == 200) {
-        console.log('response: ', response)
-        console.log('body: ', body);
-        var email = body.email // this is the email address
-        // sign and send back the JWT here
-      }
-
+router.post('/jwt-test', function(req, res, next){
+  console.log('request body should have jwt:', req.body);
+  res.end();
 })
-      res.send('success')
+
+router.post('/google-login', function(req, res, next){
+  return request('https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=' + req.body.access_token, function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        console.log('body: ', body);
+        var profile = {
+          email: body.email
+        } // this is their google email address
+        var token = jwt.sign(profile, process.env.SECRET);
+        res.json({token: token});
+        // sign and send back the JWT here
+      } else {
+        res.json('there was an error')
+      }
+})
+
 })
 
 router.post('/admin/signup', function(req, res, next){

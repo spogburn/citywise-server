@@ -8,11 +8,8 @@ expressJWT = require('express-jwt'),
 jwt = require('jsonwebtoken'),
 cors = require('cors'),
 knex = require('./db/knex'),
-passport = require('passport'),
-GoogleStrategy = require('passport-google-oauth20').Strategy,
 app = express(),
 http = require('http').Server(app),
-cookieSession = require('cookie-session'),
 bcrypt = require('bcrypt');
 
 var port = process.env.PORT || 3000;
@@ -26,48 +23,6 @@ var port = process.env.PORT || 3000;
 app.use(cors());
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(cookieSession({
-    name: 'Session',
-    keys: [
-        process.env.KEY_ONE,
-        process.env.KEY_TWO,
-        process.env.KEY_THREE
-    ]
-}));
-
-//initialize passport
-app.use(passport.initialize());
-app.use(passport.session());
-
-// used to serialize the user for the session
-passport.serializeUser(function(user, done) {
-    //later this will be where you selectively send to the browser an identifier for your user, like their primary key from the database, or their ID from Google
-    // console.log('serializeUser');
-    // console.log(user);
-    done(null, user);
-});
-
-passport.deserializeUser(function(obj, done) {
-    // knex('users').where({
-    //     username: profile.username
-    // });
-    console.log('deserializeUser');
-    done(null, obj);
-});
-
-passport.use(new GoogleStrategy({
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: 'http://localhost:3000/oauth/google/callback',
-      passReqToCallback   : true
-      },
-      function(req, accessToken, refreshToken, profile, done) {
-       profile.accessToken = accessToken;
-       console.log('accessToken: ', profile.accessToken);
-       req.session.exist = true;
-       return done(null, profile);
-       })
-      );
 
 var oauth = require('./routes/oauth');
 var api = require('./routes/api');
