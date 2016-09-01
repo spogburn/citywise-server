@@ -19,15 +19,19 @@ router.post('/jwt-test', function(req, res, next){
 router.post('/google-login', function(req, res, next){
   return request('https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=' + req.body.access_token, function (error, response, body) {
       if (!error && response.statusCode == 200) {
-        console.log('body: ', body);
+        // turns the body string into a json object
+        body = JSON.parse(body)
+        // sets email into the profile
         var profile = {
           email: body.email
-        } // this is their google email address
-        var token = jwt.sign(profile, process.env.SECRET);
-        res.json({token: token});
+        }
         // sign and send back the JWT here
+        var token = jwt.sign(profile, process.env.SECRET);
+        
+        res.json({token: token, profile: profile});
+
       } else {
-        res.json('there was an error')
+        res.json('there was an error');
       }
 })
 
