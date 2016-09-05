@@ -9,8 +9,8 @@ router.get('/home', function(req, res, next){
 })
 
 
-router.post('/say-something', function(req,res,next){
-  knex('fixits').insert(req.body).returning('issue')
+router.post('/city-wise', function(req,res,next){
+  knex('wiseups').insert(req.body).returning('issue')
   .then(function(data){
     res.json(data)
   })
@@ -19,8 +19,8 @@ router.post('/say-something', function(req,res,next){
   })
 });
 
-router.get('/say-something', function(req, res, next){
-  knex('fixits').where('city_id', '=', 'cities.id')
+router.get('/city-wise', function(req, res, next){
+  knex('wiseups').where('city_id', '=', 'cities.id')
   .then(function(data){
     data = data[0];
     res.json(data)
@@ -30,8 +30,8 @@ router.get('/say-something', function(req, res, next){
   })
 })
 
-router.put('/say-something/:id', function(req, res, next){
-  knex('fixits').where('id', '=', req.body.id)
+router.put('/city-wise/:id', function(req, res, next){
+  knex('wiseups').where('id', '=', req.body.id)
   .update({is_fixed: true}).returning('*')
   .then(function(data){
     res.json(data);

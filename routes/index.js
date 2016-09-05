@@ -7,9 +7,9 @@ var bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
 var request = require('request');
 
-router.get('/', function(req, res, next){
-  res.send("<a href='/oauth/google'><button>Click Here To Authenticate</button></a>")
-})
+// router.get('/', function(req, res, next){
+//   res.send("<a href='/oauth/google'><button>Click Here To Authenticate</button></a>")
+// })
 
 router.post('/jwt-test', function(req, res, next){
   console.log('request body should have jwt:', req.body);
@@ -27,7 +27,7 @@ router.post('/google-login', function(req, res, next){
         }
         // sign and send back the JWT here
         var token = jwt.sign(profile, process.env.SECRET);
-        
+
         res.json({token: token, profile: profile});
 
       } else {
