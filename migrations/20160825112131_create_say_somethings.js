@@ -1,7 +1,7 @@
 'use strict';
 
 exports.up = function(knex, Promise) {
-return knex.schema.createTable('fixits', function(table) {
+return knex.schema.createTable('wiseups', function(table) {
   table.increments();
   table.string('city').notNullable();
   table.integer('city_id').references('cities.id')
@@ -18,7 +18,7 @@ return knex.schema.createTable('fixits', function(table) {
 };
 
 exports.down = function(knex, Promise) {
-  return knex.schema.dropTable('fixits');
+  return knex.schema.dropTable('wiseups');
 
 };
 
