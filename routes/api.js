@@ -10,9 +10,37 @@ router.get('/home', function(req, res, next){
 
 
 router.post('/city-wise', function(req,res,next){
-  knex('wiseups').insert(req.body).returning('issue')
+  var wiseup = {
+    category: req.body.category,
+    issue: req.body.issue,
+    photo_url: req.body.url,
+    user_email: req.body.user_email,
+    lat: req.body.lat,
+    long: req.body.long
+  }
+  knex('locations').where({city_name: req.body.city, state_abbr: req.body.state})
   .then(function(data){
-    res.json(data)
+    console.log("data when city doesn't exist:", data);
+    if(data.length === 0){
+      knex('locations').insert({city_name: req.body.city, state_abbr: req.body.state})
+      .returning('id')
+      .then(function(id){
+      wiseup.city_id = id;
+      knex('wiseups').insert(wiseup)
+      .then(function(data){
+      console.log(data);
+        })
+      })
+    }
+    else {
+      console.log('the city exists and here is the data:', data[0]);
+      wiseup.city_id = data[0].id;
+      console.log('wiseup:', wiseup);
+      knex('wiseups').insert(wiseup)
+      .then(function(data){
+        console.log(data);
+      })
+    }
   })
   .catch(function(err){
     console.log(err);
