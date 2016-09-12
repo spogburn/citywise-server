@@ -76,14 +76,10 @@ router.post('/google-login', function(req, res, next){
 router.post('/admin/login', function(req, res, next){
   console.log('body', req.body);
   var email = req.body.email;
-  console.log(email);
   knex('admins').where('admin_email', '=', email)
   .then(function(user){
-    console.log('userdata', user);
     user = user[0];
-    console.log('user', user);
     if (user){
-      console.log('user:', user);
       bcrypt.compare(req.body.password, user.admin_password, function(err, result){
         if (result){
           delete user.admin_password;

@@ -45,6 +45,8 @@ router.post('/city-wise', function(req,res,next){
 });
 
 router.get('/city-wise', function(req, res, next){
+  console.log('jwt', jwt);
+  console.log('jwt string', JSON.stringify(jwt));
   knex('wiseups').where('city_id', '=', 'cities.id')
   .then(function(data){
     data = data[0];
