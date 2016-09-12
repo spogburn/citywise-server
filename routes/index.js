@@ -37,46 +37,51 @@ router.post('/google-login', function(req, res, next){
 
 })
 
-router.post('/admin/signup', function(req, res, next){
-  var adminData = {};
-  bcrypt.hash(req.body.password, 10, function(err, hash){
-    if (err) {
-      res.json({
-        message: 'Password parsing error!'
-      });
-    } else {
-      knex('cities').insert({
-        name: req.body.name,
-        admin_email: req.body.admin_email,
-        admin_password: hash,
-      })
-      .returning('*')
-      .then(function(data){
-        adminData = data[0]
-      })
-      .then(function() {
-        var token = jwt.sign(adminData, process.env.SECRET);
-        res.status(200);
-        res.json({
-          token: token,
-          user: adminData
-        });
-      })
-      .catch(function(err) {
-        res.json({
-          message: 'Error! ' + err
-        });
-      });
-    }
-  })
-});
+// router.post('/admin/signup', function(req, res, next){
+//     var adminData = {};
+//     bcrypt.hash(req.body.password, 10, function(err, hash){
+//       if (err) {
+//         res.json({
+//           message: 'Password parsing error!'
+//         });
+//       } else {
+//         knex('cities').insert({
+//           name: req.body.name,
+//           admin_email: req.body.admin_email,
+//           admin_password: hash,
+//         })
+//         .returning('*')
+//         .then(function(data){
+//           adminData = data[0]
+//         })
+//         .then(function() {
+//           var token = jwt.sign(adminData, process.env.SECRET);
+//           res.status(200);
+//           res.json({
+//             token: token,
+//             user: adminData
+//           });
+//         })
+//         .catch(function(err) {
+//           res.json({
+//             message: 'Error! ' + err
+//           });
+//         });
+//       }
+//     })
+//   });
+// })
+
 
 router.post('/admin/login', function(req, res, next){
   console.log('body', req.body);
-  var email = req.body.admin_email;
-  knex('cities').where('admin_email', '=', req.body.admin_email)
+  var email = req.body.email;
+  console.log(email);
+  knex('admins').where('admin_email', '=', email)
   .then(function(user){
+    console.log('userdata', user);
     user = user[0];
+    console.log('user', user);
     if (user){
       console.log('user:', user);
       bcrypt.compare(req.body.password, user.admin_password, function(err, result){
