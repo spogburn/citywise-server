@@ -47,9 +47,10 @@ router.post('/city-wise', function(req,res,next){
 router.get('/city-wise', function(req, res, next){
   console.log('req user', req.user);
   var cityId = req.user.city_id
+  console.log('cityId', cityId);
   knex('wiseups').where('city_id', '=', cityId)
   .then(function(data){
-    data = data[0];
+    console.log('data', data);
     res.json(data)
   })
   .catch(function(err){
@@ -62,6 +63,7 @@ router.put('/city-wise/:id', function(req, res, next){
   knex('wiseups').where('id', '=', cityId)
   .update({is_fixed: true}).returning('*')
   .then(function(data){
+    console.log('fixed data', data);
     res.json(data);
   })
   .catch(function(err){
