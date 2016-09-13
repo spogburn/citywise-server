@@ -45,20 +45,21 @@ router.post('/city-wise', function(req,res,next){
 });
 
 router.get('/city-wise', function(req, res, next){
-  console.log('jwt', jwt);
-  console.log('jwt string', JSON.stringify(jwt));
-  knex('wiseups').where('city_id', '=', 'cities.id')
+  console.log('req user', req.user);
+  var cityId = req.user.city_id
+  knex('wiseups').where('city_id', '=', cityId)
   .then(function(data){
     data = data[0];
     res.json(data)
   })
   .catch(function(err){
-    console.log(err);
+    res.json(err)
   })
 })
 
 router.put('/city-wise/:id', function(req, res, next){
-  knex('wiseups').where('id', '=', req.body.id)
+  var cityId = req.user.city_id
+  knex('wiseups').where('id', '=', cityId)
   .update({is_fixed: true}).returning('*')
   .then(function(data){
     res.json(data);
