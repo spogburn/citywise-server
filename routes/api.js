@@ -72,6 +72,16 @@ router.put('/city-wise/:id/fixed', function(req, res, next){
 });
 
 router.put('/city-wise/:id/archive', function(req, res, next){
+  console.log('params', req.params.id);
+  knex('wiseups').where('id', '=', req.params.id)
+  .update({is_archived: true, archived_date: knex.fn.now()}).returning('*')
+  .then(function(data){
+    console.log('fixed data', data);
+    res.json(data);
+  })
+  .catch(function(err){
+    res.status(500).json({error:err})
+  })
 });
 
 module.exports = router;
