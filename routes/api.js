@@ -60,7 +60,7 @@ router.get('/city-wise', function(req, res, next){
 
 router.put('/city-wise/:id', function(req, res, next){
   var cityId = req.user.city_id
-  knex('wiseups').where('id', '=', cityId)
+  knex('wiseups').where('id', '=', req.params.id)
   .update({is_fixed: true}).returning('*')
   .then(function(data){
     console.log('fixed data', data);
