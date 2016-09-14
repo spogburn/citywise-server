@@ -68,9 +68,10 @@ router.put('/city-wise/:id/fixed', function(req, res, next){
   })
   .catch(function(err){
     res.status(500).json({error:err})
-})
+  })
+});
 
 router.put('/city-wise/:id/archive', function(req, res, next){
-}
+});
 
 module.exports = router;
