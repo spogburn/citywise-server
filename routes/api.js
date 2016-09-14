@@ -49,6 +49,7 @@ router.get('/city-wise', function(req, res, next){
   var cityId = req.user.city_id
   console.log('cityId', cityId);
   knex('wiseups').where('city_id', '=', cityId)
+  .andWhere('is_fixed', false)
   .then(function(data){
     console.log('data', data);
     res.json(data)
