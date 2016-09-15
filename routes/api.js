@@ -61,8 +61,9 @@ router.get('/city-wise', function(req, res, next){
 
 router.put('/city-wise/:id/fixed', function(req, res, next){
   console.log('params', req.params.id);
+  console.log('req.body', req.body);
   knex('wiseups').where('id', '=', req.params.id)
-  .update({is_fixed: true}).returning('*')
+  .update({is_fixed: req.body.is_fixed}).returning('*')
   .then(function(data){
     console.log('fixed data', data);
     res.json(data);
@@ -74,10 +75,11 @@ router.put('/city-wise/:id/fixed', function(req, res, next){
 
 router.put('/city-wise/:id/archive', function(req, res, next){
   console.log('params', req.params.id);
+  console.log(req.body);
   knex('wiseups').where('id', '=', req.params.id)
-  .update({is_archived: true, archived_date: knex.fn.now()}).returning('*')
+  .update({is_archived: req.body.is_archived, archived_date: knex.fn.now()}).returning('*')
   .then(function(data){
-    console.log('fixed data', data);
+    console.log('archived data', data);
     res.json(data);
   })
   .catch(function(err){
