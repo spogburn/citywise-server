@@ -63,7 +63,7 @@ router.put('/city-wise/:id/fixed', function(req, res, next){
   console.log('params', req.params.id);
   console.log('req.body', req.body);
   knex('wiseups').where('id', '=', req.params.id)
-  .update({is_fixed: req.body.is_fixed}).returning('*')
+  .update({is_fixed: req.body.is_fixed, fixed_date: knex.fn.now()}).returning('*')
   .then(function(data){
     console.log('fixed data', data);
     res.json(data);
