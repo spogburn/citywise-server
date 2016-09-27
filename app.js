@@ -10,12 +10,10 @@ cors = require('cors'),
 knex = require('./db/knex'),
 app = express(),
 http = require('http').Server(app),
-bcrypt = require('bcrypt');
+bcrypt = require('bcrypt'),
+ClientError = require('./errors/error').ClientError;
 
 var port = process.env.PORT || 3000;
-
-
-
 
 
 // middleware
@@ -24,11 +22,19 @@ app.use(cors());
 app.use(logger('dev'));
 app.use(bodyParser.json());
 
-var oauth = require('./routes/oauth');
+app.use(function(req, res, next){
+  res.throwClientError = function(message){
+    var error = new ClientError(message);
+    next(error)
+  }
+  next();
+})
+
 var api = require('./routes/api');
 var index = require('./routes/index')
 app.use('/', index)
 
+// jwt middleware
 app.use('/api', expressJWT({
   secret: process.env.SECRET
 }), api);
@@ -40,12 +46,28 @@ app.use(function(err, req, res, next) {
     res.status(401).send({
       message: 'Invalid Token or Unauthorized',
       status: 401,
-      error: err.inner.message
+      error: err.inner.message || 'Invalid Token or Unauthorized'
     });
   } else {
-    next();
+    next(err);
   }
 });
+
+// app.use(function(err, req, res, next){
+//   if (err.type === 'ClientError'){
+//     res.json({
+//       error: true,
+//       message: err.message
+//     })
+//   }
+//     else {
+//       res.json({
+//         error: true,
+//         message: 'An error has occured.'
+//       })
+//     }
+//   }
+// })
 
 // error handlers
 // catch 404 and forward to error handler

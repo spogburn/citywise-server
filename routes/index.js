@@ -11,10 +11,10 @@ var request = require('request');
 //   res.send("<a href='/oauth/google'><button>Click Here To Authenticate</button></a>")
 // })
 
-router.post('/jwt-test', function(req, res, next){
-  console.log('request body should have jwt:', req.body);
-  res.end();
-})
+// router.post('/jwt-test', function(req, res, next){
+//   console.log('request body should have jwt:', req.body);
+//   res.end();
+// })
 
 router.post('/google-login', function(req, res, next){
   return request('https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=' + req.body.access_token, function (error, response, body) {
@@ -31,7 +31,7 @@ router.post('/google-login', function(req, res, next){
         res.json({token: token, profile: profile});
 
       } else {
-        res.json('there was an error');
+        res.status(400).json('there was an error');
       }
 })
 
@@ -92,17 +92,22 @@ router.post('/admin/login', function(req, res, next){
             });
           }
         else {
-          res.json({
-            error: 'invalid username or password'
+          res.status(401).json({
+            error: 'Invalid username or password'
           });
         }
       })
     }
     else {
-      res.json({
-        error: 'looks like you need to sign up for an account'
+      res.status(401).json({
+        error: 'Looks like you need to sign up for an account'
       })
     }
+  })
+  .catch(function(err){
+    res.status(401).json({
+      error: 'Invalid username or password'
+    })
   })
 })
 
