@@ -40,7 +40,8 @@ router.post('/city-wise', function(req,res,next){
     }
   })
   .catch(function(err){
-    res.json(err);
+    // handle this error in a way that gives feedback to the user
+    res.throwClientError('An error occured adding your wiseup to the database. You may want to try again later');
   })
 });
 
