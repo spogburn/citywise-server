@@ -1,4 +1,4 @@
-# citywise-server
+# Citywise Server
 
 ##About
 
